@@ -61,6 +61,12 @@ app.get('/users', function (req, res) {
 	}
 });
 
+app.get('/logout', function (req, res) {
+	accessToken = "";
+	accessSecret = "";
+	res.sendfile(__dirname + '/index.html');
+});
+
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
 app.get('/authenticated', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/error' }));

@@ -35,4 +35,4 @@ TODO list:
 
 4. 	Do error checking to check for duplicate tweets
 
-5.  Add loading screens 
+5.  Add better mobile support, currently mobile has some html scaling issues...still functional though 
