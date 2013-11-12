@@ -16,7 +16,7 @@ var _twitterConsumerSecret = "EBKpTqlfztWp1PFSHeW7WqoTzncuYK3d5xhBpUvjx4";
 var twitter = new twitterAPI({
     consumerKey: _twitterConsumerKey,
     consumerSecret: _twitterConsumerSecret,
-    callback: 'http://twittermapp.herokuapp.com/results'
+    callback: 'http://127.0.0.1:5000/results'
 });
 
 app.configure(function() {
@@ -33,7 +33,7 @@ app.configure(function() {
 passport.use(new TwitterStrategy({
 	  consumerKey: _twitterConsumerKey,
 	  consumerSecret: _twitterConsumerSecret,
-	  callbackURL: "http://twittermapp.herokuapp.com/authenticated"
+	  callbackURL: "http://127.0.0.1:5000/authenticated"
 	},
 	function(token, tokenSecret, profile, done) {
 		accessToken = token;
