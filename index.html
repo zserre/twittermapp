@@ -21,6 +21,8 @@
        	<!-- javascript -->
        	<script type="text/javascript" language="javascript"  src="/js/client.js"></script>
        	<script type="text/javascript" language="javascript"  src="/js/text-label.js"></script>
+       	<script type="text/javascript" language="javascript"  src="/js/spin.js"></script>
+       	<script type="text/javascript" language="javascript"  src="/js/jquery.spin.js"></script>
     	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADjsaHo2HeLWVmFgmvakwYTtW3GwcSNa4&sensor=false"></script>
     </head>
 	<body>
@@ -50,7 +52,10 @@
 		<div id="twitterUserDialog" title="Twitter User Info">
   			<p>  
 				<div class="fRight"><button id="btnTwitterMap">twittermapp results</button></div>	
-				<div id="noResults" class="bottomSpacer"></div>  
+				<div align="center"  class="bottomSpacer">
+					
+					<div id="noResults"></div>
+				</div>  
 				<div id="twitTimelineTable">
 					<table border="0" cellspacing="0" cellpadding="0">
 		      			<tr>                    
@@ -58,7 +63,7 @@
 		      			</tr>                
 					</table>
 				</div>
-				
+				<div id="spinnerGeo"></div>
   			</p>
   			<div id="map-canvas"></div>
 		</div>

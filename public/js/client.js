@@ -1,4 +1,3 @@
-//twitMapBot12345
 var map;
 var markersArray = [];
 var LatLngList = [];
@@ -109,6 +108,9 @@ function doTwitterSearch(){
 }
 
 function loadTwitterMapData(username){
+	$('#spinnerGeo').spin('large', '#777777');
+	$('#spinnerGeo').show();
+	$('#twitTimelineTable').hide();
 	$("#noResults").html("Obtaining geo results for @" + username + "...please wait");
 	$.getJSON("/twitter/timeline/geo/" + username, function(result){	
 		var hasGeo = false;
@@ -137,6 +139,7 @@ function loadTwitterMapData(username){
 		if (!hasGeo){
 			$("#noResults").html("No geo results for @" + username);
 		}
+		$('#spinnerGeo').hide();
 		initialize();
 	});
 }

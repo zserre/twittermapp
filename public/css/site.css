@@ -8,6 +8,15 @@ body {
 }
 
 
+#spinnerGeo{
+	height: 50px;
+}
+
+#spinnerGeo{
+	height: 200px;
+}
+
+
 .fixedWidthSite
 {
     width: 800px;  /* using 20px less than a full 800px width allows for browser chrome and avoids a horizontal scroll bar */	
