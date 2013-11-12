@@ -35,4 +35,6 @@ TODO list:
 
 4. 	Do error checking to check for duplicate tweets
 
-5.  Add better mobile support, currently mobile has some html scaling issues...still functional though 
+5.  Add better mobile support, currently mobile has some html scaling issues...still functional though
+  
+6.  Do more server side processing of geo results, currently all processing is being done client side
