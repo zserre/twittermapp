@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>        
+        <title>twittermapp</title>
+        <link rel="shortcut icon" href="/images/favicon.ico" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="-1" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        
+       	<!-- CSS -->
+       	<link type="text/css" rel="stylesheet" href="/css/site.css" />
+       	<link type="text/css" rel="stylesheet" href="/css/droid.css" /> 
+       	<link type="text/css" rel="stylesheet" href="/jquery/css/custom-theme/jquery-ui-1.10.3.custom.css">
+	
+       
+       <!-- jquery -->
+       	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+       	<script src="/jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
+       	
+       	<!-- javascript -->
+       	<script type="text/javascript" language="javascript"  src="/js/client.js"></script>
+       	<script type="text/javascript" language="javascript"  src="/js/text-label.js"></script>
+    	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADjsaHo2HeLWVmFgmvakwYTtW3GwcSNa4&sensor=false"></script>
+    </head>
+	<body>
+        <div class="fixedWidthSite">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td><a href="/" title="twittermapp"><img src="/images/twitterMapBanner.png" id="twitterMapBanner" /></a></td>
+                    <td><div id="lblWelcomeUser" class="greenText"></div></td>                                 
+                </tr>                
+            </table>
+        </div>    
+        <div id="topSpacer"></div>     
+        <div id="container" class="fixedWidthSite">
+	         <table class="layout-grid" width="100%" border="0" cellspacing="0" cellpadding="0">
+	              <tr>
+	              	<td >
+		            	<div id="siteContent">		            
+		                </div>
+	               	</td>
+	              </tr>
+	         </table>         
+        </div>
+		<div class="bottomSpacer"></div>  
+        <div id="footer" class="fixedWidthSite">
+             created by: Zach Serre | email: zserre @t gmail DOT com | github: zserre | phone: 218.310.8236 | location: mpls, mn
+        </div>
+		<div id="twitterUserDialog" title="Twitter User Info">
+  			<p>  
+				<div class="fRight"><button id="btnTwitterMap">twittermapp results</button></div>	
+				<div id="noResults" class="bottomSpacer"></div>  
+				<div id="twitTimelineTable">
+					<table border="0" cellspacing="0" cellpadding="0">
+		      			<tr>                    
+				          <td><table id="twitTimeline"></table></td>                                     
+		      			</tr>                
+					</table>
+				</div>
+				
+  			</p>
+  			<div id="map-canvas"></div>
+		</div>
+		
+		
+    </body>
+</html>

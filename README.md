@@ -1,4 +1,38 @@
 twittermapp
-===========
+==========
 
-search twitter and display geo location on a map for node.js
+A simple node.js app that displays twitter search results and places the
+geolocation of the results on a map
+
+to run server issue this command: node server.js 
+
+server will run on localhost:5000 (127.0.0.1:5000) 
+
+Live example is available [here]
+
+[here]: http://twittermapp.herokuapp.com/
+
+node.js npm dependancies (not included in github repo):
+	express
+	oath
+	passport
+	node-twitter-api
+
+
+The following as a list of limitations the current implementation has, 
+didn't implment due to time constraints other obligations etc.  The base 
+functionality is all there though
+
+TODO list:
+
+1.  Implement more stringent error handling / sanitize inputs
+
+2.	Implement a more robust session management system, 
+	right now it only works for one user log in per server instance
+	
+3.	Update the View to show proper formatting for time, urls, link
+	other twitter handles, highlight search terms, etc
+
+4. 	Do error checking to check for duplicate tweets
+
+5.  Add loading screens 
