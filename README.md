@@ -11,7 +11,7 @@ Live example is available [here]
 
 [here]: http://twittermapp.herokuapp.com/
 
-node.js npm dependancies (not included in github repo):
+node.js npm dependancies:
 	express
 	oath
 	passport
