@@ -1,4 +1,4 @@
-<a  href="http://twittermapp.herokuapp.com"> ![launch twittermapp](/public/images/twitterMapBanner.png "Click to launch twittermapp")</a>
+<a target="_blank" href="http://twittermapp.herokuapp.com"> ![launch twittermapp](/public/images/twitterMapBanner.png "Click to launch twittermapp")</a>
 
 A simple node.js app that displays twitter search results and places the
 geolocation of the results on a map
