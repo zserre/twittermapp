@@ -1,4 +1,4 @@
-<a  href="https://twittermapp.herokuapp.com"> ![launch twittermapp](https://raw.github.com/zserre/twittermapp/public/images/twitterMapBanner.png "Click to launch twittermapp")</a>
+<a  href="https://twittermapp.herokuapp.com"> ![launch twittermapp](/public/images/twitterMapBanner.png "Click to launch twittermapp")</a>
 
 twittermapp
 ==========
