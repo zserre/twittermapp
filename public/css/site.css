@@ -7,16 +7,6 @@ body {
 	background: url(../images/bannerBackground.png) repeat-x 25% 0, url(../images/bg.png);	
 }
 
-
-#spinnerGeo{
-	height: 50px;
-}
-
-#spinnerGeo{
-	height: 200px;
-}
-
-
 .fixedWidthSite
 {
     width: 800px;  /* using 20px less than a full 800px width allows for browser chrome and avoids a horizontal scroll bar */	
@@ -38,6 +28,14 @@ body {
 	height: 25px;
 }
 
+#noResults{
+	font:  1.1em 'Droid Sans', sans-serif;
+    color: #bbbbbb !important;	
+    align: center;
+    width: 500px;
+	height: 25px;    
+}
+
 #twitTimelineTable{
 	width: 425px;
 	height: 400px;
@@ -50,10 +48,39 @@ body {
 }
 
 #twitterResults{
-	width: 0px;
-	height: 0px;
+	width: 775px;
+	height: 500px;
 	overflow:scroll;
 	overflow-x: auto;
+}
+
+#twitterUserResults{
+	width: 300px;
+	height: 500px;
+	overflow:scroll;
+	overflow-x: auto;
+}
+
+#twitterMapResults{
+	width: 475px;
+	height: 475px;
+	overflow:scroll;
+	overflow-x: auto;
+}
+
+.twitterTimelineHeader{
+	font:  1.1em 'Droid Sans', sans-serif;
+    background: #8ebd7a !important;	
+	border:3px solid #333333;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px;      
+}
+
+
+.twitterTimelineRow{
+	font:  1.3em 'Droid Sans', sans-serif;
+    color: #333333 !important;	
 }
 
 .twitterMessageRow{
@@ -78,8 +105,8 @@ body {
 }
 
 #contentTable{
-	height: 500px;
-	width: 200px;
+	/*height: 500px;
+	width: 200px;*/
 }
 
 .tableContentOn{
