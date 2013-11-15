@@ -8,16 +8,15 @@ var twitterAPI = require('node-twitter-api');
 var app = express();
 var users = [];
 var authenticatedUsers = [];
-var accessToken = "";
-var accessSecret = "";
 var host = "";
+var twitterPage =0;
 
-var _twitterConsumerKey = "6OJg20qK5P4tKM1MdM8dQ";
-var _twitterConsumerSecret = "EBKpTqlfztWp1PFSHeW7WqoTzncuYK3d5xhBpUvjx4";
+var twitterConsumerKey = "6OJg20qK5P4tKM1MdM8dQ";
+var twitterConsumerSecret = "EBKpTqlfztWp1PFSHeW7WqoTzncuYK3d5xhBpUvjx4";
 
 var twitter = new twitterAPI({
-    consumerKey: _twitterConsumerKey,
-    consumerSecret: _twitterConsumerSecret,
+    consumerKey: twitterConsumerKey,
+    consumerSecret: twitterConsumerSecret,
     callback: host + "/results"
 });
 
@@ -33,19 +32,21 @@ app.configure(function() {
 });
 
 passport.use(new TwitterStrategy({
-	  consumerKey: _twitterConsumerKey,
-	  consumerSecret: _twitterConsumerSecret,
+	  consumerKey: twitterConsumerKey,
+	  consumerSecret: twitterConsumerSecret,
 	  callbackURL: host + "/authenticated"
 	},
 	function(token, tokenSecret, profile, done) {
 		accessToken = token;
 		accessSecret = tokenSecret;
 		var user = users[profile.id] || (users[profile.id] = 
-											{	id: profile.id, 
+											{	
+												id: profile.id, 
 												name: profile.username,
 											});
 		var authenticatedUser = authenticatedUsers[profile.id] || (authenticatedUsers[profile.id] = 
-											{	token: token, 
+											{	
+												token: token, 
 												secret: tokenSecret,
 											});
         done(null, user);
@@ -61,26 +62,25 @@ passport.deserializeUser(function(id, done) {
     done(null, user);
 });
 
-app.get('/users/:username', function (req, res) {
-	console.log(req.cookies);
+app.get('/users/:username', function (req, res) {	
 	console.log(req.cookies.username);
-	
-	if (users.length == 0){
+	if ((req.cookies.username == undefined) || (req.cookies.username == '')){
 		res.cookie('username', '');
 		res.json({});
 	}
-	else{
-		res.cookie('username', users[users.length-1].id);
-		res.json(users[users.length-1]);
+	else{		
+		if(users[parseInt(req.cookies.username)] == undefined) {
+   			res.cookie('username', '');
+   			res.json({});		
+		}else {
+			res.json(users[parseInt(req.cookies.username)]);
+		}
+		
 	}
-	
-
- 
 });
 
 app.get('/logout', function (req, res) {
-	accessToken = "";
-	accessSecret = "";
+	res.cookie('username', '');
 	users = [];
 	req.logout();
 	res.json({});
@@ -88,17 +88,29 @@ app.get('/logout', function (req, res) {
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
-app.get('/authenticated', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/error' }));
+app.get('/authenticated', passport.authenticate('twitter', { 
+	successRedirect: '/validLogin', 
+	failureRedirect: '/error' 
+}));
 
-app.get('/twitter/search/:query', function (req, res) {
+app.get('/validLogin', function(req, res){	
+	if(req.user == undefined){
+		res.cookie('username', '');		
+	}else{	
+		res.cookie('username', req.user.id);		
+	}
+	res.redirect('/');
+});
+
+app.get('/twitter/search/:query', function (req, res) {	
 	searchParams = {
 			q: req.params.query,					
 			result_type: "mixed"
 	};
 	
 	twitter.search(searchParams,
-	    accessToken,
-	    accessSecret,
+	    authenticatedUsers[req.cookies.username].token,
+	    authenticatedUsers[req.cookies.username].secret,
 	    function(error, data, response) {
 	        if (error) {
 	        	console.log(error);
@@ -110,7 +122,7 @@ app.get('/twitter/search/:query', function (req, res) {
 	);
 });
 
-app.get('/twitter/timeline/:user', function (req, res) {
+app.get('/twitter/timeline/:user', function (req, res) {	
 	params = {
 			screen_name: req.params.user,
 			count: 100,
@@ -120,8 +132,8 @@ app.get('/twitter/timeline/:user', function (req, res) {
 	twitter.getTimeline (
 		"user_timeline", 
 		params,
-	    accessToken,
-	    accessSecret,
+	    authenticatedUsers[req.cookies.username].token,
+	    authenticatedUsers[req.cookies.username].secret,
 	    function(error, data, response) {
 	        if (error) {
 	        	console.log(error);
@@ -133,44 +145,39 @@ app.get('/twitter/timeline/:user', function (req, res) {
 	);
 });
 
-app.get('/twitter/timeline/geo/:user', function (req, res) {
+app.get('/twitter/timeline/geo/:user', function (req, res) {	
 	var retJson = [];
-	var j=0;
+	twitterPage = 0;
 	for(var i=1;i<10;i++){
 		params = {
-				screen_name: req.params.user,
-				count: 200,
-				page: i,
-				include_entities: true,
-				include_rts: true
+			screen_name: req.params.user,
+			count: 200,
+			page: i,
+			include_entities: true,
+			include_rts: true
 		};
-		twitter.getTimeline (
+		twitter.getTimeline(
 			"user_timeline", 
 			params,
-		    accessToken,
-		    accessSecret,
+		    authenticatedUsers[req.cookies.username].token,
+	    	authenticatedUsers[req.cookies.username].secret,
 		    function(error, data, response) {
 		        if (error) {
 		        	console.log(error);
 		        	res.json(retJson);   
 		        } else {
-		        	j = j + 1;
+		        	twitterPage++;		        	
 		        	retJson = retJson.concat(data);
-		        	if (j >= 9){
+		        	if (twitterPage >= 9){
 		        		res.json(retJson);
-		        	}
-		        		           
+		        	}		           
 		        }
 		    }
 		);
 	}
 });
 
-app.get('/vailidUser', function (req, res) {
-    res.sendfile(__dirname + '/public/html/twitterSearch.html');
-});
-
-app.get('/', function (req, res) {
+app.get('/', function(req, res){
     res.sendfile(__dirname + '/index.html');
 });
 

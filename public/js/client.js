@@ -1,7 +1,7 @@
 var map;
 var markersArray = [];
 
-function initialize() {
+function initializeMap() {
 	var myLatlng = new google.maps.LatLng(44.9833,-93.2667);
 	var mapOptions = {
 			zoom: 12,
@@ -105,36 +105,37 @@ function doTwitterSearch(query){
 }
 
 function loadTwitterMapData(username){
-	$.getJSON("/twitter/timeline/geo/" + username, function(result){	
-		var hasGeo = false;
-		
-		markersArray = [];
+	for(var i=1;i<10;i++){
+		$.getJSON("/twitter/timeline/geo/" + username, function(result){	
+			var hasGeo = false;
+			
+			markersArray = [];
 
-		if (!jQuery.isEmptyObject(result)){	
-			var j = 0;
-			for(var i= 0; i < result.length; i++){
-				if (result[i].geo != null){
+			if (!jQuery.isEmptyObject(result)){	
+				var j = 0;
+				for(var i= 0; i < result.length; i++){
+					if (result[i].geo != null){
 
-					markersArray.push(new Array);
-					markersArray[j].push(result[i].geo.coordinates[0]);
-					markersArray[j].push(parseFloat(result[i].geo.coordinates[1]));
-					markersArray[j].push(result[i].text.toString());
-					markersArray[j].push(result[i].user.screen_name.toString());
-				
-					hasGeo = true;
-					j++;
+						markersArray.push(new Array);
+						markersArray[j].push(result[i].geo.coordinates[0]);
+						markersArray[j].push(parseFloat(result[i].geo.coordinates[1]));
+						markersArray[j].push(result[i].text.toString());
+						markersArray[j].push(result[i].user.screen_name.toString());
+					
+						hasGeo = true;
+						j++;
+					}
 				}
 			}
-		}
-		if (!hasGeo){
-			$("#noResults").html("No geo results for @" + username);
-		}else{
-			$("#noResults").html("Displaying geo results for @" + username);	
-		}
-		
-		initialize();
-		
-	});
+			if (!hasGeo){
+				$("#noResults").html("No geo results for @" + username);
+			}else{
+				$("#noResults").html("Displaying geo results for @" + username);	
+			}
+			
+			initializeMap();
+		});
+	}
 }
 
 function displayContent(selector){
@@ -219,7 +220,7 @@ function loadPage(){
 					}
 			    });
 			});
-			google.maps.event.addDomListener(window, 'load', initialize);
+			google.maps.event.addDomListener(window, 'load', initializeMap);
 		}
 	});
 }
