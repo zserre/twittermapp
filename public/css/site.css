@@ -39,25 +39,21 @@ body {
 #twitTimelineTable{
 	width: 425px;
 	height: 400px;
-	overflow:scroll;
+	overflow:auto;
 	overflow-x: auto;
-}
-
-#twitTimeline{
-	width: 400px; 
 }
 
 #twitterResults{
 	width: 775px;
 	height: 500px;
-	overflow:scroll;
+	overflow:auto;
 	overflow-x: auto;
 }
 
 #twitterUserResults{
 	width: 300px;
 	height: 500px;
-	overflow:scroll;
+	overflow:auto;
 	overflow-x: auto;
 }
 

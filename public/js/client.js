@@ -1,11 +1,5 @@
 var map;
 var markersArray = [];
-var LatLngList = [];
-
-function clearOverlays() {
-  markersArray = [];
-  LatLngList = [];
-}
 
 function initialize() {
 	var myLatlng = new google.maps.LatLng(44.9833,-93.2667);
@@ -18,51 +12,36 @@ function initialize() {
 	
 	var maxLen = markersArray.length;
 	if (maxLen > 100){ maxLen = 100; }
-
+	
+	var bounds = new google.maps.LatLngBounds();
 	for (var i = 0; i < maxLen; i++) {
+		var iPosition = new google.maps.LatLng(markersArray[i][0], markersArray[i][1])
         var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(markersArray[i][0], markersArray[i][1]),
+            position: iPosition,
             map: map,
             title: markersArray[i][2]
         });
+        bounds.extend(iPosition);
+
     }
+
+	$("#twitterMapResults").fadeIn("drop", function(){
+		google.maps.event.trigger(map, "resize");
+	 	if (maxLen > 0){ 
+	 		map.fitBounds(bounds); 
+	 	}else{
+	 		map.panTo(myLatlng);
+	 	}
+	 });
 	
-	if (LatLngList.length > 1){
-		var bounds = new google.maps.LatLngBounds();
-		for (var i = 0, LtLgLen = LatLngList.length; i < LtLgLen; i++) {
-				bounds.extend(LatLngList[i]);
-		}
-		map.fitBounds(bounds);
-	}
-	
-	$("#twitterMapResults").show("drop");
 }
 	  
-function addSearchTextHandler(){
-	$("#searchInput").on('inputchange', function() {
-		if (this.value != ""){$("#searchSpan").hide();}
-		else{$("#searchSpan").show();}
-	});
-	
-	$("#searchInput").keypress(function(event){
-		if (event.which == 13) {
-			if($("#searchInput").val() != ""){
-				doTwitterSearch();
-				$("#searchInput").blur();
-			}
-		}
-	});
-}
 
 function loadTwitterUser(user, query){
 	console.log(user);
 	$.getJSON("/twitter/timeline/" + user, function(result){
-		//$("#twitterUserDialog").dialog("open");		
+
 		if (!jQuery.isEmptyObject(result)){	
-			console.log(result);
-			
-			$("#twitterUserDialog").dialog('option', 'title', 'Timeline for user: @' + user);
-			$("#btnTwitterMap").html("twittermapp @" + user);
 			
 			var iRow = "";
 			iRow = iRow + "<tr><td class='twitterMessageRow'><a href='javascript:void(0)' ";
@@ -77,16 +56,11 @@ function loadTwitterUser(user, query){
 			}
 			$("#twitTimeline").html("<table>" + iRow + "</table>");
 			$("#twitterUserResults").html("<table>" + iRow + "</table>");
-			$("#twitterResults").hide("drop",function() {
-				$("#twitterUserResults").show("drop",function() {
-					loadTwitterMapData(user);
-				});
-			});
+			$("#noResults").html("Obtaining geo results for @" + user + "...please wait");
+			displayContent("user");
+			loadTwitterMapData(user);
 		}
 	});
-	
-	//$("#twitterUserResults").show("slide");
-	//$("#twitterMapResults").show("slide");
 }
 
 function doTwitterSearch(query){
@@ -96,16 +70,10 @@ function doTwitterSearch(query){
 		$("#searchInput").val(query);
 	} 
 	$.getJSON("/twitter/search/" + query, function(result){	
-		console.log(result);
-		$("#twitterUserResults").hide();
-		$("#twitterMapResults").hide();
-		$("#noResults").hide();
-		
-		$("#twitterResults").show();
 		$("#contentTable").hide();
-		
 		$("#contentTable").addClass("tableContentOn");
 		$("#contentTable").fadeIn("3000");
+		displayContent("search");
 		
 		if (!jQuery.isEmptyObject(result)){
 
@@ -133,18 +101,10 @@ function doTwitterSearch(query){
 }
 
 function loadTwitterMapData(username){
-	$("#twitterMapResults").hide();
-	$("#noResults").show();
-	$('#twitTimelineTable').hide();
-	$("#noResults").html("Obtaining geo results for @" + username + "...please wait");
 	$.getJSON("/twitter/timeline/geo/" + username, function(result){	
 		var hasGeo = false;
 		
-		$("#twitterUserDialog").dialog('option', 'title', 'twittermapp for user: @' + username);
-		$('#twitTimelineTable').hide();
-		$('#twitterMapResults').show();
-		$("#noResults").show();
-		clearOverlays();
+		markersArray = [];
 
 		if (!jQuery.isEmptyObject(result)){	
 			var j = 0;
@@ -156,8 +116,6 @@ function loadTwitterMapData(username){
 					markersArray[j].push(parseFloat(result[i].geo.coordinates[1]));
 					markersArray[j].push(result[i].text.toString());
 					markersArray[j].push(result[i].user.screen_name.toString());
-							
-					LatLngList.push(new google.maps.LatLng(result[i].geo.coordinates[0], result[i].geo.coordinates[1]));
 				
 					hasGeo = true;
 					j++;
@@ -175,6 +133,51 @@ function loadTwitterMapData(username){
 	});
 }
 
+function displayContent(selector){
+	switch(selector){
+		case "none":
+			$("#twitterResults").hide();
+			$("#twitterUserResults").hide();
+			$("#twitterMapResults").hide();
+			$("#noResults").hide();
+			break;
+		case "search":
+			$("#twitterResults").show();
+			$("#twitterUserResults").hide();
+			$("#twitterMapResults").hide();
+			$("#noResults").hide();
+			break;
+		case "user":
+			$("#twitterResults").hide("drop",function() {
+				$("#twitterUserResults").show("drop",function() {
+					$("#noResults").show();
+					return;
+				});
+			});
+			break;
+		case "map":   
+			//$("#twitterMapResults").show("drop");
+			$("#noResults").show();
+			break;
+	};
+}
+
+function addSearchTextHandler(){
+	$("#searchInput").on('inputchange', function() {
+		if (this.value != ""){$("#searchSpan").hide();}
+		else{$("#searchSpan").show();}
+	});
+	
+	$("#searchInput").keypress(function(event){
+		if (event.which == 13) {
+			if($("#searchInput").val() != ""){
+				doTwitterSearch();
+				$("#searchInput").blur();
+			}
+		}
+	});
+}
+
 $(document).ready(function() {
 	
 
@@ -189,11 +192,12 @@ $(document).ready(function() {
 			});
 		}
 		else{
+			displayContent("search");
 			$("#lblWelcomeUser").html("Welcome, @" + result["name"]);
 			$("#siteContent").load("../html/twitterSearch.html #siteContent", function loadHtml(response, status, xhr) {
 				addSearchTextHandler();
-				$("#btnLogin").button();
-				$("#btnLogin").bind("click", {}, function () {
+				$("#btnSearch").button();
+				$("#btnSearch").bind("click", {}, function () {
 					if($("#searchInput").val() != ""){
 						doTwitterSearch();
 					}
@@ -206,6 +210,3 @@ $(document).ready(function() {
 		}
 	});
 });
-
-
-

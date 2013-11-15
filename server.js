@@ -9,6 +9,7 @@ var app = express();
 var users = [];
 var accessToken = "";
 var accessSecret = "";
+var host = "";
 
 var _twitterConsumerKey = "6OJg20qK5P4tKM1MdM8dQ";
 var _twitterConsumerSecret = "EBKpTqlfztWp1PFSHeW7WqoTzncuYK3d5xhBpUvjx4";
@@ -16,7 +17,7 @@ var _twitterConsumerSecret = "EBKpTqlfztWp1PFSHeW7WqoTzncuYK3d5xhBpUvjx4";
 var twitter = new twitterAPI({
     consumerKey: _twitterConsumerKey,
     consumerSecret: _twitterConsumerSecret,
-    callback: 'http://twittermapp.herokuapp.com/results'
+    callback: host + "/results"
 });
 
 app.configure(function() {
@@ -33,7 +34,7 @@ app.configure(function() {
 passport.use(new TwitterStrategy({
 	  consumerKey: _twitterConsumerKey,
 	  consumerSecret: _twitterConsumerSecret,
-	  callbackURL: "http://twittermapp.herokuapp.com/authenticated"
+	  callbackURL: host + "/authenticated"
 	},
 	function(token, tokenSecret, profile, done) {
 		accessToken = token;
@@ -157,5 +158,11 @@ app.get('/', function (req, res) {
 
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
-  console.log("server started on port " + port);
+	if(process.argv.length < 3){
+		 console.log("Not enough parameters   usage: node server.js [host]");
+		  process.exit(code=0);
+	}else{
+		  host = process.argv[2];
+		  console.log("server started on " + host + ":" + port);
+	}
 });
