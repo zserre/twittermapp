@@ -7,6 +7,7 @@ var twitterAPI = require('node-twitter-api');
 
 var app = express();
 var users = [];
+var authenticatedUsers = [];
 var accessToken = "";
 var accessSecret = "";
 var host = "";
@@ -39,7 +40,14 @@ passport.use(new TwitterStrategy({
 	function(token, tokenSecret, profile, done) {
 		accessToken = token;
 		accessSecret = tokenSecret;
-		var user = users[profile.id] || (users[profile.id] = { id: profile.id, name: profile.username });
+		var user = users[profile.id] || (users[profile.id] = 
+											{	id: profile.id, 
+												name: profile.username,
+											});
+		var authenticatedUser = authenticatedUsers[profile.id] || (authenticatedUsers[profile.id] = 
+											{	token: token, 
+												secret: tokenSecret,
+											});
         done(null, user);
 	}
 ));
@@ -53,19 +61,29 @@ passport.deserializeUser(function(id, done) {
     done(null, user);
 });
 
-app.get('/users', function (req, res) {
+app.get('/users/:username', function (req, res) {
+	console.log(req.cookies);
+	console.log(req.cookies.username);
+	
 	if (users.length == 0){
+		res.cookie('username', '');
 		res.json({});
 	}
 	else{
+		res.cookie('username', users[users.length-1].id);
 		res.json(users[users.length-1]);
 	}
+	
+
+ 
 });
 
 app.get('/logout', function (req, res) {
 	accessToken = "";
 	accessSecret = "";
-	res.sendfile(__dirname + '/index.html');
+	users = [];
+	req.logout();
+	res.json({});
 });
 
 app.get('/auth/twitter', passport.authenticate('twitter'));

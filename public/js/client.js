@@ -22,7 +22,6 @@ function initialize() {
             title: markersArray[i][2]
         });
         bounds.extend(iPosition);
-
     }
 
 	$("#twitterMapResults").fadeIn("drop", function(){
@@ -33,7 +32,6 @@ function initialize() {
 	 		map.panTo(myLatlng);
 	 	}
 	 });
-	
 }
 	  
 
@@ -60,6 +58,12 @@ function loadTwitterUser(user, query){
 			displayContent("user");
 			loadTwitterMapData(user);
 		}
+	});
+}
+
+function logout(){
+	$.getJSON("/logout", function(result){	
+		location.reload();
 	});
 }
 
@@ -178,10 +182,12 @@ function addSearchTextHandler(){
 	});
 }
 
-$(document).ready(function() {
+function loadPage(){
 	
-
-	$.getJSON("/users", function(result){
+	$("#btnLogoutTwitter").hide();
+	var username = document.cookie.username || "none";
+	console.log(username);
+	$.getJSON("/users/" + username, function(result){
 		console.log(result);
 		if (jQuery.isEmptyObject(result)){
 			$("#siteContent").load("../html/login.html #siteContent", function loadHtml(response, status, xhr) {
@@ -194,6 +200,13 @@ $(document).ready(function() {
 		else{
 			displayContent("search");
 			$("#lblWelcomeUser").html("Welcome, @" + result["name"]);
+			
+			$("#btnLogoutTwitter").button();
+			$("#btnLogoutTwitter").bind("click", {}, function () {
+				logout();
+		    });
+			$("#btnLogoutTwitter").show();
+			
 			$("#siteContent").load("../html/twitterSearch.html #siteContent", function loadHtml(response, status, xhr) {
 				addSearchTextHandler();
 				$("#btnSearch").button();
@@ -209,4 +222,8 @@ $(document).ready(function() {
 			google.maps.event.addDomListener(window, 'load', initialize);
 		}
 	});
+}
+
+$(document).ready(function() {
+	loadPage();
 });
